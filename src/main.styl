@@ -1,0 +1,247 @@
+//// RESET //////////////////////////////////////
+*
+    margin 0
+    padding 0
+    box-sizing border-box
+//// FONTS //////////////////////////////////////
+@font-face
+    font-family "Minion Pro"
+    font-style normal
+    font-weight normal
+    src url("./fonts/minion-pro.woff2")
+    font-display swap
+@font-face
+    font-family "Minion Pro"
+    font-style normal
+    font-weight bold
+    src url("./fonts/minion-pro_bold.woff2")
+    font-display swap
+@font-face
+    font-family "Perpetua"
+    font-style normal
+    font-weight normal
+    src url("./fonts/perpetua.woff2")
+    font-display swap
+@font-face
+    font-family "Perpetua"
+    font-style normal
+    font-weight bold
+    src url("./fonts/perpetua_bold.woff2")
+    font-display swap
+@font-face
+    font-family "Perpetua"
+    font-style italic
+    font-weight normal
+    src url("./fonts/perpetua_italic.woff2")
+    font-display swap
+@font-face
+    font-family "Perpetua"
+    font-style italic
+    font-weight bold
+    src url("./fonts/perpetua_bold-italic.woff2")
+    font-display swap
+minion(sz, c=black, w=normal)
+    font sz "Minion Pro", serif
+    color c
+    font-weight w
+    line-height sz
+perpetua(sz, c=black, w=normal, st=normal, h=1.1)
+    font sz "Perpetua", serif
+    color c
+    font-weight w
+    font-style st
+    line-height sz*h
+//// COLOR //////////////////////////////////////
+main            = #fff8e3
+alt             = #4b0c10
+alt2            = #4b0c1000
+main-text       = #000000
+link-text       = #1f53a6
+border-c        = #4b0c10dd
+/////////////////////////////////////////////////
+rpl-red         = #FF8A80
+rpl-orange      = #f57c00
+rpl-yellow      = #fbC02d
+rpl-green       = #6ab046
+rpl-blue        = #5db0e1
+rpl-purple      = #b176e8
+rpl-pink        = #e15dc9
+/////////////////////////////////////////////////
+theme           = rpl-red
+prime           = tint(theme, 50%)
+primeb          = saturate(shade(theme, 20%), 80%)
+primec          = saturate(shade(theme, 80%), 100%)
+theme2          = rpl-green
+prime2          = tint(theme2, 50%)
+prime2b         = saturate(shade(theme2, 20%), 80%)
+prime2c         = saturate(shade(theme2, 80%), 100%)
+themeText       = black
+//// MAIN ///////////////////////////////////////
+html
+    scroll-behavior smooth
+    scrollbar-width none
+    -ms-overflow-style none
+    &::-webkit-scrollbar
+        display none
+h1
+    minion(68px, primec, bold)
+    text-align center
+h2
+    minion(56px, primec, bold)
+h3
+    minion(40px, rgba(main-text, 0.8), bold)
+h4
+    minion(28px, primec, bold)
+h5
+    minion(30px, primec, bold)
+    letter-spacing -1px
+p
+    perpetua(22px, main-text)
+.sm
+    perpetua(20px, main-text)
+    line-height 27px
+.space
+    height 40px
+.center
+    text-align center
+.comment
+    perpetua(20px,  rgba(main-text, 0.7), bold, italic)
+a
+    perpetua(22px, link-text, bold)
+.lcomment
+    perpetua(20px,  rgba(link-text, 0.8), bold, italic)
+.rpl
+    margin-top 12px
+    width 256px
+.blast
+    width 100px
+.lh
+    line-height 30px
+.icon
+    max-width 175px
+    svg
+        width 44px
+        fill primeb
+//// STRUCTURE //////////////////////////////////
+body
+    display flex
+    flex-flow column
+    gap 16px
+    margin 64px auto
+    max-width 1070px
+    min-width 1070px
+.head
+    display flex
+    flex-flow row
+    gap 16px
+    background-color prime
+    border 3px solid primeb
+    &__logo
+        display flex
+        flex-direction column
+        justify-content center
+        align-items center
+        flex 1
+        padding 16px
+    &__title
+        display flex
+        flex-direction column
+        justify-content center
+        align-items center
+        flex 3
+        padding 0 16px
+    &__issue
+        display flex
+        flex-direction column
+        justify-content center
+        align-items center
+        flex 1
+        padding 16px
+        background-color primeb
+        h2
+            margin-top 8px
+        *
+            transform scale(133%)
+            color themeText
+.content
+    padding 16px
+    background-color prime
+    text-align center
+    border 3px solid primeb
+.content2
+    padding 16px
+    background-color prime2
+    text-align center
+    border 3px solid prime2b
+.snippet
+    display flex
+    flex-flow row
+    gap 16px
+    background-color prime
+    border 3px solid primeb
+    &__image
+        flex 1
+        padding 16px
+        width 200px
+        height 278px
+    &__desc
+        display flex
+        flex-direction column
+        justify-content center
+        flex 3
+        padding 16px
+        background-color prime
+.snippet2
+    display flex
+    flex-flow row
+    gap 16px
+    background-color prime2
+    border 3px solid prime2b
+    &__image
+        flex 1
+        padding 16px
+        width 200px
+        height 278px
+    &__desc
+        display flex
+        flex-direction column
+        justify-content center
+        flex 3
+        padding 16px
+        background-color prime2
+.foot
+    display flex
+    flex-direction row
+    justify-content space-between
+    align-items center
+    &__left
+        display flex
+        flex-direction column
+        justify-content center
+        align-items center
+    &__center
+        display flex
+        flex-direction column
+        justify-content center
+        text-align justify
+        line-height 18px
+    &__right
+        display flex
+        flex-direction column
+        justify-content center
+        align-items flex-end
+        text-align right
+        gap 16px
+    &__links
+        display flex
+        flex-direction row
+        justify-content center
+        align-items center
+        gap 32px
+        padding 16px
+.als
+    align-self center
+.day
+    display inline-block
+    font-weight bold
+    width 140px
