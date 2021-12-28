@@ -3,43 +3,52 @@
     margin 0
     padding 0
     box-sizing border-box
-//// FONTS //////////////////////////////////////
-@font-face
-    font-family "Minion Pro"
-    font-style normal
-    font-weight normal
-    src url("./fonts/minion-pro.woff2")
-    font-display swap
-@font-face
-    font-family "Minion Pro"
-    font-style normal
-    font-weight bold
-    src url("./fonts/minion-pro_bold.woff2")
-    font-display swap
-@font-face
-    font-family "Perpetua"
-    font-style normal
-    font-weight normal
-    src url("./fonts/perpetua.woff2")
-    font-display swap
-@font-face
-    font-family "Perpetua"
-    font-style normal
-    font-weight bold
-    src url("./fonts/perpetua_bold.woff2")
-    font-display swap
-@font-face
-    font-family "Perpetua"
-    font-style italic
-    font-weight normal
-    src url("./fonts/perpetua_italic.woff2")
-    font-display swap
-@font-face
-    font-family "Perpetua"
-    font-style italic
-    font-weight bold
-    src url("./fonts/perpetua_bold-italic.woff2")
-    font-display swap
+//// FUNCTIONS ////////////////////////////////////////////////////////////////
+load-font(name, file, w=normal, st=normal)
+    @font-face
+        font-family name
+        font-style st
+        font-weight w
+        src url("./fonts/" + file + ".woff2")
+        font-display swap
+satshade(target, shade-amt, sat-amt)
+    return saturate(shade(target, shade-amt), sat-amt)
+themer(c)
+    return tint(c, 50%) satshade(c, 20%, 80%) satshade(c, 80%, 100%)
+theme-gen(color-theme, n)
+    if n == 1
+        n = ''
+    .content{n}
+        padding 16px
+        background-color color-theme[0]
+        text-align center
+        border 3px solid color-theme[1]
+    .snippet{n}
+        display flex
+        flex-flow row
+        gap 16px
+        background-color color-theme[0]
+        border 3px solid color-theme[1]
+        &__image
+            flex 1
+            padding 16px
+            width 200px
+            height 278px
+        &__desc
+            display flex
+            flex-direction column
+            justify-content center
+            flex 3
+            padding 16px
+            background-color color-theme[0]
+//// LOAD FONTS ///////////////////////////////////////////////////////////////
+load-font("Minion Pro", "minion-pro")
+load-font("Minion Pro", "minion-pro_bold", bold)
+load-font("Perpetua", "perpetua")
+load-font("Perpetua", "perpetua_bold", bold)
+load-font("Perpetua", "perpetua_italic",, italic)
+load-font("Perpetua", "perpetua_bold-italic", bold, italic)
+//// FONT FUNCTIONS ///////////////////////////////////////////////////////////
 minion(sz, c=black, w=normal)
     font sz "Minion Pro", serif
     color c
@@ -51,32 +60,20 @@ perpetua(sz, c=black, w=normal, st=normal, h=1.1)
     font-weight w
     font-style st
     line-height sz*h
-//// COLOR //////////////////////////////////////
-main            = #fff8e3
-alt             = #4b0c10
-alt2            = #4b0c1000
-main-text       = #000000
-link-text       = #1f53a6
-border-c        = #4b0c10dd
-/////////////////////////////////////////////////
-rpl-red         = #FF8A80
-rpl-orange      = #f57c00
-rpl-yellow      = #fbC02d
-rpl-green       = #6ab046
-rpl-blue        = #5db0e1
-rpl-purple      = #b176e8
-rpl-pink        = #e15dc9
-/////////////////////////////////////////////////
-theme           = rpl-red
-prime           = tint(theme, 50%)
-primeb          = saturate(shade(theme, 20%), 80%)
-primec          = saturate(shade(theme, 80%), 100%)
-theme2          = rpl-green
-prime2          = tint(theme2, 50%)
-prime2b         = saturate(shade(theme2, 20%), 80%)
-prime2c         = saturate(shade(theme2, 80%), 100%)
-themeText       = black
-//// MAIN ///////////////////////////////////////
+//// COLOR ////////////////////////////////////////////////////////////////////
+main        = #fff8e3
+main-text   = #000000
+link-text   = #1f53a6
+colors      = #ff8a80 #f57c00 #fbc02d #6ab046 #5db0e1 #b176e8 #e15dc9
+//// MAGIC ////////////////////////////////////////////////////////////////////
+themes = 4 4
+//// MAGIC ////////////////////////////////////////////////////////////////////
+primary = colors[themes[0]]
+issue = primary == colors[1] || primary == colors[2] || primary == colors[4] ? black : white
+theme = themer(primary)
+for th, i in themes
+    theme-gen(themer(colors[th]), i+1)
+//// MAIN /////////////////////////////////////////////////////////////////////
 html
     scroll-behavior smooth
     scrollbar-width none
@@ -84,16 +81,16 @@ html
     &::-webkit-scrollbar
         display none
 h1
-    minion(68px, primec, bold)
+    minion(68px, theme[2], bold)
     text-align center
 h2
-    minion(56px, primec, bold)
+    minion(56px, theme[2], bold)
 h3
     minion(40px, rgba(main-text, 0.8), bold)
 h4
-    minion(28px, primec, bold)
+    minion(28px, theme[2], bold)
 h5
-    minion(30px, primec, bold)
+    minion(30px, theme[2], bold)
     letter-spacing -1px
 p
     perpetua(22px, main-text)
@@ -121,8 +118,8 @@ a
     max-width 175px
     svg
         width 44px
-        fill primeb
-//// STRUCTURE //////////////////////////////////
+        fill theme[1]
+//// STRUCTURE ////////////////////////////////////////////////////////////////
 body
     display flex
     flex-flow column
@@ -134,8 +131,8 @@ body
     display flex
     flex-flow row
     gap 16px
-    background-color prime
-    border 3px solid primeb
+    background-color theme[0]
+    border 3px solid theme[1]
     &__logo
         display flex
         flex-direction column
@@ -157,58 +154,12 @@ body
         align-items center
         flex 1
         padding 16px
-        background-color primeb
+        background-color theme[1]
         h2
             margin-top 8px
         *
             transform scale(133%)
-            color themeText
-.content
-    padding 16px
-    background-color prime
-    text-align center
-    border 3px solid primeb
-.content2
-    padding 16px
-    background-color prime2
-    text-align center
-    border 3px solid prime2b
-.snippet
-    display flex
-    flex-flow row
-    gap 16px
-    background-color prime
-    border 3px solid primeb
-    &__image
-        flex 1
-        padding 16px
-        width 200px
-        height 278px
-    &__desc
-        display flex
-        flex-direction column
-        justify-content center
-        flex 3
-        padding 16px
-        background-color prime
-.snippet2
-    display flex
-    flex-flow row
-    gap 16px
-    background-color prime2
-    border 3px solid prime2b
-    &__image
-        flex 1
-        padding 16px
-        width 200px
-        height 278px
-    &__desc
-        display flex
-        flex-direction column
-        justify-content center
-        flex 3
-        padding 16px
-        background-color prime2
+            color issue
 .foot
     display flex
     flex-direction row

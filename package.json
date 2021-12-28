@@ -1,5 +1,5 @@
 {
-  "name": "eblasts",
+  "name": "eblast",
   "version": "1.0.0",
   "description": "An eBlast generator for Raritan Public Library.",
   "dependencies": {
