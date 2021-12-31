@@ -136,6 +136,7 @@ if (checkClass(`main`)) {
         `
         color = color != colors-1 ? color + 1 : 0;
     });
+    
     // Inject events into HTML
     let endTime;
     events.forEach(event => {
@@ -181,6 +182,15 @@ if (checkClass(`main`)) {
         }
         color = color != colors-1 ? color + 1 : 0;
     });
+
+    // Set last block
+    output += `
+    <div class="content${color}">
+        <p class="lh">We hope that you and your families are well and safe at home. We invite you to take advantage of our collection of eBooks and eAudios on <a href="https://ebook.yourcloudlibrary.com/library/raritanpl/Featured" target="_blank">cloudLibrary</a>, as well as <a href="https://www.hoopladigital.com/" target="_blank">hoopla</a> for additional eBooks, audiobooks, movies, comics, CDs and graphic novels. We also offer <a href="https://search.ebscohost.com/login.aspx?authtype=cpid&custid=s8971388&site=rosetstone&return=y&groupid=main" target="_blank"> Rosetta Stone</a> and <a href="http://learning.pronunciator.com/getstarted.php?library_id=7904" target="_blank"> Pronunciator</a> for you to develop your language skills, and <a href="https://www.ancestryheritagequest.com/" target="_blank"> Heritage Quest</a> for genealogical and other historical research.</p>
+        <br>
+        <p>If you need help connecting to these services, please call our Library at <b>(908) 725-0413</b>.</p>
+    </div>`
+
     // Set the content to the class
     setClass(`main`, output)
 }
