@@ -1,4 +1,4 @@
-const yaml = require('js-yaml');
+import { load } from 'js-yaml';
 
 // Function to request a response from a URL
 const req = url => {
@@ -11,29 +11,8 @@ const req = url => {
 };
 
 // Time definitions
-const weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-];
-const month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-];
+const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // Format a date or time into a string
 const formatDate = (n) => {
@@ -68,9 +47,20 @@ const setClass = (c, str, n=0) => document.getElementsByClassName(c)[n].innerHTM
 // Load data
 const newsData = req(`https://raw.githubusercontent.com/raritanlibrary/www/main/src/data/news.yaml`)
 const eventData = req(`https://raw.githubusercontent.com/raritanlibrary/www/main/src/data/events.yaml`)
-let news = yaml.load(newsData);
-let events = yaml.load(eventData);
+let news = load(newsData);
+let events = load(eventData);
 const now = new Date();
+
+// Grab amount of colors in palette
+const colors = Number(getComputedStyle(document.documentElement).getPropertyValue('--palette-length'));
+
+// Set month in header
+let monthNow = Number(getComputedStyle(document.documentElement).getPropertyValue('--m'));
+monthNow = monthNow == 4 ? month[monthNow] : `${month[monthNow].substring(0, 3)}.`;
+setClass(`month`, monthNow)
+
+// Set year in header
+setClass(`year`, addDays(now, 14).getFullYear())
 
 // Sort and delete excess news data
 news = news.sort((a, b) => a.date - b.date);
@@ -131,22 +121,26 @@ for (let i = 0; i < events.length; i++) {
     }
 }
 
+// Set to .main
 if (checkClass(`main`)) {
     // Inject news into HTML
     let output = ``;
+    let color = colors != 1 ? 1 : 0;
     news.forEach(post => {
         output += `
-        <div class="content">
+        <div class="content${color}">
             <h2 >${post.name}</h2>
             <br>
             <p class="lh">${post.desc}</p>
         </div>
-        `        
+        `
+        color = color != colors-1 ? color + 1 : 0;
     });
     // Inject events into HTML
     let endTime;
     events.forEach(event => {
         let eventDate;
+        let eventBr = ``;
         if (!event.noendtime) {
             endTime = ` - ${formatTime(addHours(event.datenominal, event.length))}`;
         } else {
@@ -165,6 +159,7 @@ if (checkClass(`main`)) {
                     eventDate += `${month[day.getMonth()]} ${formatDate(day.getDate())}`
                     if (i < event.date.length-1) { eventDate += `,&nbsp;` }
                 });
+                eventBr = `<br>`;
             }
         } else if (Array.isArray(event.date) && event.date.length === 1) {
             eventDate = `${weekday[event.date[0].getDay()]}, ${month[event.date[0].getMonth()]} ${formatDate(event.date[0].getDate())}, ${formatTime(event.date[0])}${endTime}`
@@ -173,17 +168,18 @@ if (checkClass(`main`)) {
         }
         if (addHours(event.datenominal, event.length) >= now) {
             output += `
-            <div class="snippet">
-                <img class="snippet__image" src="https://raritanlibrary.org/img/events/_${event.img}.png">
-                <div class="snippet__desc">
+            <div class="snippet${color}">
+                <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/_${event.img}.png">
+                <div class="snippet${color}__desc">
                     <h3 >${event.name}</h3>
                     <p class="comment space">${eventDate}</p>
-                    <br>
+                    ${eventBr}
                     <p class="lh">${event.desc}</p>
                 </div>
             </div>
             `
         }
+        color = color != colors-1 ? color + 1 : 0;
     });
     // Set the content to the class
     setClass(`main`, output)
