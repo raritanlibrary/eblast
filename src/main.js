@@ -38,7 +38,7 @@ const formatTime = (d) => {
 
 // Function to add time to a date object
 const addHours = (d, h) => new Date(d.getTime() + h*60*60*1000);
-const addDays = (d, h) => new Date(d.getTime() + h*60*60*1000*24);
+const addDays = (d, h) => new Date(d.getTime() + h*24*60*60*1000);
 
 // Class-related functions
 const checkClass = (c) => document.getElementsByClassName(c).length > 0;
@@ -136,7 +136,7 @@ if (checkClass(`main`)) {
         `
         color = color != colors-1 ? color + 1 : 0;
     });
-    
+
     // Inject events into HTML
     let endTime;
     events.forEach(event => {
