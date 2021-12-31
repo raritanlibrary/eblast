@@ -5,8 +5,8 @@
   "dependencies": {
     "js-yaml": "^4.1.0",
     "pug": "^3.0.2",
-    "puppeteer": "^11.0.0",
-    "stylus": "^0.55.0"
+    "puppeteer": "^13.0.1",
+    "stylus": "^0.56.0"
   },
   "devDependencies": {
     "@parcel/transformer-pug": "^2.0.1",
