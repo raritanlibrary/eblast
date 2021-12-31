@@ -16,7 +16,7 @@
   },
   "scripts": {
     "clear": "rm -rf dist && rm -rf .parcel-cache",
-    "dev": "parcel src/eblast.pug",
+    "dev": "parcel src/eblast.pug --open 'chrome'",
     "make": "node scripts/generate.js"
   }
 }
