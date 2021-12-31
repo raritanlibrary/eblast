@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An eBlast generator for Raritan Public Library.",
   "dependencies": {
+    "js-yaml": "^4.1.0",
     "pug": "^3.0.2",
     "puppeteer": "^11.0.0",
     "stylus": "^0.55.0"

@@ -23,12 +23,14 @@ theme-gen(color-theme, n)
         background-color color-theme[0]
         text-align center
         border 3px solid color-theme[1]
+        margin-bottom 16px
     .snippet{n}
         display flex
         flex-flow row
         gap 16px
         background-color color-theme[0]
         border 3px solid color-theme[1]
+        margin-bottom 16px
         &__image
             flex 1
             padding 16px
@@ -68,9 +70,9 @@ colors      = #ff8a80 #f57c00 #fbc02d #6ab046 #5db0e1 #b176e8 #e15dc9
 //// MAGIC ////////////////////////////////////////////////////////////////////
 themes = 4 4
 //// MAGIC ////////////////////////////////////////////////////////////////////
-primary = colors[themes[0]]
-issue = primary == colors[1] || primary == colors[2] || primary == colors[4] ? black : white
-theme = themer(primary)
+prime = colors[themes[0]]
+issue = prime == colors[1] || prime == colors[2] || prime == colors[4] ? black : white
+theme = themer(prime)
 for th, i in themes
     theme-gen(themer(colors[th]), i+1)
 //// MAIN /////////////////////////////////////////////////////////////////////
@@ -113,7 +115,7 @@ a
 .blast
     width 100px
 .lh
-    line-height 30px
+    line-height 28.8px
 .icon
     max-width 175px
     svg
@@ -123,7 +125,6 @@ a
 body
     display flex
     flex-flow column
-    gap 16px
     margin 64px auto
     max-width 1070px
     min-width 1070px
@@ -133,6 +134,7 @@ body
     gap 16px
     background-color theme[0]
     border 3px solid theme[1]
+    margin-bottom 16px
     &__logo
         display flex
         flex-direction column
@@ -160,6 +162,8 @@ body
         *
             transform scale(133%)
             color issue
+.content > *
+    margin-bottom 16px
 .foot
     display flex
     flex-direction row
