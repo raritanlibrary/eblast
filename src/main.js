@@ -10,18 +10,31 @@ const req = url => {
     }
 };
 
-// Time definitions
-const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+// Days of the week and month names
+const ww = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const mm = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+// Return day of the week or month name based on a datetime object
+const weekday = t => ww[t.getDay()];
+const month = t => mm[t.getMonth()];
+
+// Millisecond shortcuts (milliseconds * seconds * minutes...)
+const msh = 36e5;
+const msd = msh*24;
+
+// Add hours or days to a datetime object
+const addHours = (d, h) => new Date(d.getTime() + h * msh);
+const addDays = (d, dd) => new Date(d.getTime() + dd * msd);
 
 // Format a date or time into a string
-const formatDate = (n) => {
-    return (n % 10 == 1 && n % 100 != 11) ? `${n}st`
-    : (n % 10 == 2 && n % 100 != 12) ? `${n}nd`
-    : (n % 10 == 3 && n % 100 != 13) ? `${n}rd`
+const formatDate = n => {
+    n = n.getDate();
+    return (n % 10 === 1 && n % 100 != 11) ? `${n}st`
+    : (n % 10 === 2 && n % 100 != 12) ? `${n}nd`
+    : (n % 10 === 3 && n % 100 != 13) ? `${n}rd`
     : `${n}th`
 }
-const formatTime = (d) => {
+const formatTime = d => {
     const hh = d.getHours();
     const m = d.getMinutes().toString().padStart(2, 0);
     let dd = "AM";
@@ -36,12 +49,14 @@ const formatTime = (d) => {
     return `${h}:${m} ${dd}`;
 }
 
-// Function to add time to a date object
-const addHours = (d, h) => new Date(d.getTime() + h*60*60*1000);
-const addDays = (d, h) => new Date(d.getTime() + h*24*60*60*1000);
+// Shortcuts to combine stringified datetimes
+const monthDay = t => `${month(t)} ${formatDate(t)}`;
+const fullDate = t => `${weekday(t)}, ${monthDay(t)}`;
+const monthDayTime = t => `${monthDay(t)} at ${formatTime(t)}`;
+const fullDayTime = t => `${fullDate(t)}, ${formatTime(t)}`;
 
 // Class-related functions
-const checkClass = (c) => document.getElementsByClassName(c).length > 0;
+const checkClass = c => document.getElementsByClassName(c).length > 0;
 const setClass = (c, str, n=0) => document.getElementsByClassName(c)[n].innerHTML = str;
 
 // Load data
@@ -55,12 +70,16 @@ const now = new Date();
 const colors = Number(getComputedStyle(document.documentElement).getPropertyValue('--palette-length'));
 
 // Set month in header
-let monthNow = Number(getComputedStyle(document.documentElement).getPropertyValue('--m'));
-monthNow = monthNow == 4 ? month[monthNow] : `${month[monthNow].substring(0, 3)}.`;
-setClass(`month`, monthNow)
+if (checkClass("month")) {
+    let monthNow = Number(getComputedStyle(document.documentElement).getPropertyValue('--m'));
+    monthNow = monthNow == 4 ? mm[monthNow] : `${mm[monthNow].substring(0, 3)}.`;
+    setClass("month", monthNow);
+}
 
 // Set year in header
-setClass(`year`, addDays(now, 14).getFullYear())
+if (checkClass("year")) {
+    setClass("year", addDays(now, 14).getFullYear());
+}
 
 // Sort and delete excess news data
 news = news.sort((a, b) => a.date - b.date);
@@ -74,48 +93,38 @@ for (let i = 0; i < news.length; i++) {
 
 // Organize event data
 events.forEach(event => {
-    if (event.date === 'tbd') {
-        event.datesortable = addHours(now, event.length);
-        event.datenominal = addHours(now, event.length);
-        event.zoom = false;
-    } else if (event.length === 'daterange') {
-        event.length = 1;
-        event.datenominal = event.date[1];
-        event.daterange = true;
-        if (event.date[0] < now) {
-            event.datesortable = now;
-        } else {
-            event.datesortable = event.date[0];
-        }
+    event.length = event.length === "range" ? 1 : event.length;
+    if (event.date === "tbd") {
+        event.dateSort = new Date(1e14);
+        event.dateName = new Date(1e14);
+    } else if (event.length === "range") {
+        event.dateSort = event.date[0] < now ? now : event.date[0];
+        event.dateName = event.date[1];
+        event.range = true;
     } else if (Array.isArray(event.date)) {
-        for (let i = 0; i < event.date.length; i++) {
+        const numDays = event.date.length;
+        for (let i = 0; i < numDays; i++) {
             let day = event.date[i];
-            if (addHours(day, event.length) < now && event.date.length !== 1) {
+            if (addHours(day, event.length) < now && numDays !== 1) {
                 event.date.shift();
-                if (event.zoom) {
-                    event.zoom.shift();
-                }
                 i--;
             } else {
-                event.datesortable = day;
-                event.datenominal = day;
-                if (event.zoom) {
-                    event.zoom = event.zoom[0];
-                }
+                event.dateSort = day;
+                event.dateName = day;
                 break;
-            } 
+            }
         }
     } else {
-        event.datesortable = event.date;
-        event.datenominal = event.date;
+        event.dateSort = event.date;
+        event.dateName = event.date;
     }
 });
 
 // Sort and delete excess event data
-events = events.sort((a, b) => a.datesortable - b.datesortable);
+events = events.sort((a, b) => a.dateSort - b.dateSort);
 for (let i = 0; i < events.length; i++) {
     let event = events[i];
-    if (event.datesortable < now) {
+    if (event.dateSort < now) {
         events.splice(i, 1);
         i--;
     }
@@ -142,32 +151,29 @@ if (checkClass(`main`)) {
     events.forEach(event => {
         let eventDate;
         let eventBr = ``;
-        if (!event.noendtime) {
-            endTime = ` - ${formatTime(addHours(event.datenominal, event.length))}`;
-        } else {
-            endTime = ``
-        }
+        endTime = event.noendtime ? `` : ` - ${formatTime(addHours(event.dateName, event.length))}`;
         if (event.date === 'tbd') {
             eventDate = `Date:&nbsp;TBD`
-        } else if (event.daterange) {
-            eventDate = `${weekday[event.date[0].getDay()]}, ${month[event.date[0].getMonth()]} ${formatDate(event.date[0].getDate())} - ${weekday[event.date[1].getDay()]}, ${month[event.date[1].getMonth()]} ${formatDate(event.date[1].getDate())}`;
+        } else if (event.range) {
+            eventDate = `${fullDate(event.date[0])} - ${fullDate(event.date[1])}`;
         } else if (Array.isArray(event.date) && event.date.length > 1) {
             if (event.date[0].getDate() === event.date[1].getDate()) {
-                eventDate = `${weekday[event.date[0].getDay()]}, ${month[event.date[0].getMonth()]} ${formatDate(event.date[0].getDate())}, ${formatTime(event.date[0])} and ${formatTime(event.date[1])}`;
+                eventDate = `${fullDate(event.date[0])}, ${formatTime(event.date[0])} and ${formatTime(event.date[1])}`;
             } else {
-                eventDate = `${weekday[event.date[0].getDay()]}s at ${formatTime(event.date[0])}${endTime} <br>`
+                eventDate = `${weekday(event.date[0])}s at ${formatTime(event.date[0])}${endTime} <br>`;
                 event.date.forEach((day, i) => {
-                    eventDate += `${month[day.getMonth()]} ${formatDate(day.getDate())}`
-                    if (i < event.date.length-1) { eventDate += `,&nbsp;` }
+                    console.log(monthDay(day));
+                    eventDate += i < event.date.length - 1 ? `${monthDay(day)},&nbsp;` : monthDay(day)
                 });
                 eventBr = `<br>`;
             }
         } else if (Array.isArray(event.date) && event.date.length === 1) {
-            eventDate = `${weekday[event.date[0].getDay()]}, ${month[event.date[0].getMonth()]} ${formatDate(event.date[0].getDate())}, ${formatTime(event.date[0])}${endTime}`
+            eventDate = `${fullDayTime(event.date[0])}${endTime}`;
         } else {
-            eventDate = `${weekday[event.date.getDay()]}, ${month[event.date.getMonth()]} ${formatDate(event.date.getDate())}, ${formatTime(event.date)}${endTime}`
+            eventDate = `${fullDayTime(event.date)}${endTime}`;
         }
-        if (addHours(event.datenominal, event.length) >= now) {
+        console.log(`${eventDate}`);
+        if (addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
                 <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/_${event.img}.png">
