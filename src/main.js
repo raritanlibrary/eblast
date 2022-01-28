@@ -70,10 +70,10 @@ const now = new Date();
 const colors = Number(getComputedStyle(document.documentElement).getPropertyValue('--palette-length'));
 
 // Set month in header
+const monthNow = Number(getComputedStyle(document.documentElement).getPropertyValue('--m'));
 if (checkClass("month")) {
-    let monthNow = Number(getComputedStyle(document.documentElement).getPropertyValue('--m'));
-    monthNow = monthNow == 4 ? mm[monthNow] : `${mm[monthNow].substring(0, 3)}.`;
-    setClass("month", monthNow);
+    monthHead = monthNow == 4 ? mm[monthNow] : `${mm[monthNow].substring(0, 3)}.`;
+    setClass("month", monthHead);
 }
 
 // Set year in header
@@ -95,8 +95,7 @@ for (let i = 0; i < news.length; i++) {
 events.forEach(event => {
     event.length = event.length === "range" ? 1 : event.length;
     if (event.date === "tbd") {
-        event.dateSort = new Date(1e14);
-        event.dateName = new Date(1e14);
+        event.dateName = event.dateSort = new Date(16e12 + 30 * monthNow * msd);
     } else if (event.length === "range") {
         event.dateSort = event.date[0] < now ? now : event.date[0];
         event.dateName = event.date[1];
@@ -109,14 +108,12 @@ events.forEach(event => {
                 event.date.shift();
                 i--;
             } else {
-                event.dateSort = day;
-                event.dateName = day;
+                event.dateName = event.dateSort = day;
                 break;
             }
         }
     } else {
-        event.dateSort = event.date;
-        event.dateName = event.date;
+        event.dateName = event.dateSort = event.date;
     }
 });
 
@@ -124,7 +121,7 @@ events.forEach(event => {
 events = events.sort((a, b) => a.dateSort - b.dateSort);
 for (let i = 0; i < events.length; i++) {
     let event = events[i];
-    if (event.dateSort < now) {
+    if (event.dateSort < now || month(event.dateSort) !== month(addDays(now, 14))) {
         events.splice(i, 1);
         i--;
     }
@@ -162,7 +159,6 @@ if (checkClass(`main`)) {
             } else {
                 eventDate = `${weekday(event.date[0])}s at ${formatTime(event.date[0])}${endTime} <br>`;
                 event.date.forEach((day, i) => {
-                    console.log(monthDay(day));
                     eventDate += i < event.date.length - 1 ? `${monthDay(day)},&nbsp;` : monthDay(day)
                 });
                 eventBr = `<br>`;
@@ -172,7 +168,6 @@ if (checkClass(`main`)) {
         } else {
             eventDate = `${fullDayTime(event.date)}${endTime}`;
         }
-        console.log(`${eventDate}`);
         if (addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
