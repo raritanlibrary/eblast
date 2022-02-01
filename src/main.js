@@ -93,13 +93,13 @@ for (let i = 0; i < news.length; i++) {
 
 // Organize event data
 events.forEach(event => {
-    event.length = event.length === "range" ? 1 : event.length;
     if (event.date === "tbd") {
         event.dateName = event.dateSort = new Date(16e12 + 30 * monthNow * msd);
     } else if (event.length === "range") {
         event.dateSort = event.date[0] < now ? now : event.date[0];
         event.dateName = event.date[1];
         event.range = true;
+        event.length = 1;
     } else if (Array.isArray(event.date)) {
         const numDays = event.date.length;
         for (let i = 0; i < numDays; i++) {
