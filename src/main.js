@@ -77,8 +77,11 @@ if (checkClass("month")) {
 }
 
 // Set year in header
+const nextNow = addDays(now, 14);
+const nextFirst = new Date(`${month(nextNow)} 1 ${nextNow.getFullYear()} 10:00:00 -5`);
+console.log(nextFirst);
 if (checkClass("year")) {
-    setClass("year", addDays(now, 14).getFullYear());
+    setClass("year", nextNow.getFullYear());
 }
 
 // Sort and delete excess news data
@@ -121,7 +124,7 @@ events.forEach(event => {
 events = events.sort((a, b) => a.dateSort - b.dateSort);
 for (let i = 0; i < events.length; i++) {
     let event = events[i];
-    if (event.dateSort < now || month(event.dateSort) !== month(addDays(now, 14))) {
+    if (event.dateSort < nextFirst) {
         events.splice(i, 1);
         i--;
     }
