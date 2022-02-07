@@ -179,7 +179,7 @@ if (checkClass(`main`)) {
                     <h3 >${event.name}</h3>
                     <p class="comment space">${eventDate}</p>
                     ${eventBr}
-                    <p class="lh">${event.desc}</p>
+                    <p class="lh">${event.desc} ${event.eblast ? `<br>${event.eblast}` : ``}</p>
                 </div>
             </div>
             `
