@@ -26,6 +26,11 @@ theme-gen(color-theme, n)
         text-align center
         border 3px solid color-theme[1]
         margin-bottom 16px
+        &__link
+            display inline-block
+            margin-top 8px
+            margin-right 8px
+            text-align center
     .snippet{n}
         display flex
         flex-flow row
@@ -45,6 +50,10 @@ theme-gen(color-theme, n)
             flex 3
             padding 16px
             background-color color-theme[0]
+        &__link
+            display inline-block
+            margin-top 8px
+            margin-right 8px
 //// LOAD FONTS ///////////////////////////////////////////////////////////////
 load-font("Minion Pro", "minion-pro")
 load-font("Minion Pro", "minion-pro_bold", bold)

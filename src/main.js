@@ -59,6 +59,13 @@ const fullDayTime = t => `${fullDate(t)}, ${formatTime(t)}`;
 const checkClass = c => document.getElementsByClassName(c).length > 0;
 const setClass = (c, str, n=0) => document.getElementsByClassName(c)[n].innerHTML = str;
 
+// Returns data based on existance of external website string
+const linkData = str => {
+    const href = str.match('^http') ? str : `https://raritanlibrary.org/${str}`;
+    const rel = str.match('^http') ? ` rel="noopener"` : ``;
+    return `href="${href}" target="_blank"${rel}`;
+}
+
 // Load data
 const newsData = req(`https://raw.githubusercontent.com/raritanlibrary/www/main/src/data/news.yaml`)
 const eventData = req(`https://raw.githubusercontent.com/raritanlibrary/www/main/src/data/events.yaml`)
@@ -134,13 +141,24 @@ for (let i = 0; i < events.length; i++) {
 if (checkClass(`main`)) {
     // Inject news into HTML
     let output = ``;
+    let newsLinks = ``;
     let color = colors != 1 ? 1 : 0;
     news.forEach(post => {
+        if (post.buttons) {
+            for (const button of post.buttons) {
+                newsLinks += `
+                <a class="snippet${color}__link" ${linkData(button.link)}">
+                    <div class="snippet${color}__link-inner">${button.name}</div>
+                </a>
+                `
+            }
+        }
         output += `
         <div class="content${color}">
             <h2 >${post.name}</h2>
             <br>
             <p class="lh">${post.desc}</p>
+            ${newsLinks}
         </div>
         `
         color = color != colors-1 ? color + 1 : 0;
@@ -151,6 +169,7 @@ if (checkClass(`main`)) {
     events.forEach(event => {
         let eventDate;
         let eventBr = ``;
+        let eventButton = ``;
         endTime = event.noendtime ? `` : ` - ${formatTime(addHours(event.dateName, event.length))}`;
         if (event.date === 'tbd') {
             eventDate = `Date:&nbsp;TBD`
@@ -171,6 +190,21 @@ if (checkClass(`main`)) {
         } else {
             eventDate = `${fullDayTime(event.date)}${endTime}`;
         }
+        if (event.form) {
+            eventButton = `
+            <a class="snippet${color}__link" ${linkData(event.form)}>
+                <div class="snippet${color}__link-inner">Sign-up form</div>
+            </a>
+            `
+        }
+        if (event.formalt) {
+            let formalt = event.formalt;
+            eventButton += `
+            <a class="snippet${color}__link" ${linkData(formalt.link)}>
+                <div class="snippet${color}__link-inner">${formalt.name}</div>
+            </a>
+            `
+        }
         if (addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
@@ -180,6 +214,7 @@ if (checkClass(`main`)) {
                     <p class="comment space">${eventDate}</p>
                     ${eventBr}
                     <p class="lh">${event.desc} ${event.eblast ? `<br>${event.eblast}` : ``}</p>
+                    ${eventButton}
                 </div>
             </div>
             `

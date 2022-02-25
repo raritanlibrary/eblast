@@ -15,7 +15,7 @@
   },
   "scripts": {
     "clear": "rm -rf dist && rm -rf .parcel-cache",
-    "dev": "./scripts/month.sh && parcel src/eblast.pug --open 'chrome' && ./scripts/month.sh reset",
+    "dev": "bash ./scripts/month.sh && parcel src/eblast.pug && bash ./scripts/month.sh reset",
     "redev": "npm run clear && npm run dev",
     "make": "node scripts/generate.js"
   }
