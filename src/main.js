@@ -208,9 +208,9 @@ if (checkClass(`main`)) {
         if (addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
-                <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/_${event.img}.png">
+                <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/_${event.img}.webp">
                 <div class="snippet${color}__desc">
-                    <h3 >${event.name}</h3>
+                    <h3 ${event.name.length > 35 ? `style="font-size: 32px; letter-spacing: -1px"` : ""}>${event.name}</h3>
                     <p class="comment space">${eventDate}</p>
                     ${eventBr}
                     <p class="lh">${event.desc} ${event.eblast ? `<br>${event.eblast}` : ``}</p>
