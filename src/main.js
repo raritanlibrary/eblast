@@ -118,7 +118,8 @@ events.forEach(event => {
                 event.date.shift();
                 i--;
             } else {
-                event.dateName = event.dateSort = day;
+                event.dateSort = day;
+                event.dateName = event.date[event.date.length-1];
                 break;
             }
         }
@@ -131,7 +132,7 @@ events.forEach(event => {
 events = events.sort((a, b) => a.dateSort - b.dateSort);
 for (let i = 0; i < events.length; i++) {
     let event = events[i];
-    if (event.dateSort < nextFirst) {
+    if (event.dateName < nextFirst) {
         events.splice(i, 1);
         i--;
     }
@@ -208,7 +209,7 @@ if (checkClass(`main`)) {
         if (addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
-                <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/_${event.img}.webp">
+                <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/${event.img}.webp">
                 <div class="snippet${color}__desc">
                     <h3 ${event.name.length > 35 ? `style="font-size: 32px; letter-spacing: -1px"` : ""}>${event.name}</h3>
                     <p class="comment space">${eventDate}</p>
