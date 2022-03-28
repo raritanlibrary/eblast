@@ -15,13 +15,13 @@ npm install
 ```
 
 ## **Usage**
-By default, eBlasts will be generated using the latest commit to the main branch of the [**www**]() repository. Relevant data from the [`events.yaml`]() and [`news.yaml`]() files will be extracted and parsed to be injected into the contents of the eBlast.
+By default, eBlasts will be generated using the latest commit to the main branch of the [**www**](https://github.com/raritanlibrary/www) **repository**. Relevant data from the [`events.yaml`](https://github.com/raritanlibrary/www/blob/main/src/data/events.yaml) and [`news.yaml`](https://github.com/raritanlibrary/www/blob/main/src/data/news.yaml) files will be extracted and parsed to be injected into the contents of the eBlast.
 
 ### **Start dev server / Preview eBlast**
 ```
 npm run dev
 ```
-This command starts up the development server in Google Chrome. You may have to refresh cache (<kbd>CTRL</kbd>+<kbd>F5</kbd>) for new changes to take effect.
+This command starts up the development server. You may have to refresh cache (<kbd>CTRL</kbd>+<kbd>F5</kbd>) for new changes to take effect.
 
 ### **Render eBlast**
 *It is **required** that you keep the development server running while this process takes place.*
