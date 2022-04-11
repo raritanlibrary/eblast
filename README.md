@@ -4,7 +4,7 @@ This **eBlast** generator provides a quick and easy solution to semi-automatiacl
 ## **Installation**
 
 ### **Node.js/npm**
-First, download or clone the latest version of this repository. Once you have the repository downloaded in a suitable location, run the following commands to check to make sure you have Node.js and npm installed.
+First, download or clone the latest version of this repository. Once you have the repository downloaded in a suitable location, run the following commands to check to make sure you have **Node.js** and **npm** installed.
 ```
 node --version
 npm --version
@@ -21,7 +21,9 @@ By default, eBlasts will be generated using the latest commit to the main branch
 ```
 npm run dev
 ```
-This command starts up the development server. You may have to refresh cache (<kbd>CTRL</kbd>+<kbd>F5</kbd>) for new changes to take effect.
+This command starts up the development server. You may have to refresh cache (<kbd>CTRL</kbd>+<kbd>F5</kbd>) for new changes to take effect. You can also run `npm run redev` to clear cache when starting the development server, which is useful for when Parcel's hot reloading feature breaks (this is especially problematic with stylesheets).
+
+**NOTE:** When running a development server, the `src/main.styl` file is modified to apply certain stylesheet properties to the eBlast. This should automatically reset to normal after the server is shut down, but please make sure that the file remains unchanged from its original state if you did not modify it.
 
 ### **Render eBlast**
 *It is **required** that you keep the development server running while this process takes place.*
