@@ -156,7 +156,7 @@ if (checkClass(`main`)) {
         }
         output += `
         <div class="content${color}">
-            <h2 >${post.name}</h2>
+            <h2>${post.name}</h2>
             <br>
             <p class="lh">${post.desc}</p>
             ${newsLinks}
