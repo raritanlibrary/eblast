@@ -86,7 +86,6 @@ if (checkClass("month")) {
 // Set year in header
 const nextNow = addDays(now, 14);
 const nextFirst = new Date(`${month(nextNow)} 1 ${nextNow.getFullYear()} 10:00:00 -5`);
-console.log(nextFirst);
 if (checkClass("year")) {
     setClass("year", nextNow.getFullYear());
 }
@@ -171,7 +170,8 @@ if (checkClass(`main`)) {
         let eventDate;
         let eventBr = ``;
         let eventButton = ``;
-        endTime = event.noendtime ? `` : ` - ${formatTime(addHours(event.dateName, event.length))}`;
+        console.log(event);
+        endTime = event.noendtime || event.appointment ? `` : ` - ${formatTime(addHours(event.dateName, event.length))}`;
         if (event.date === 'tbd') {
             eventDate = `Date:&nbsp;TBD`
         } else if (event.range) {
@@ -188,6 +188,8 @@ if (checkClass(`main`)) {
             }
         } else if (Array.isArray(event.date) && event.date.length === 1) {
             eventDate = `${fullDayTime(event.date[0])}${endTime}`;
+        } else if (event.appointment) {
+            eventDate = "By Appointment Only"
         } else {
             eventDate = `${fullDayTime(event.date)}${endTime}`;
         }
@@ -206,7 +208,7 @@ if (checkClass(`main`)) {
             </a>
             `
         }
-        if (addHours(event.dateName, event.length) >= now) {
+        if (event.appointment || addHours(event.dateName, event.length) >= now) {
             output += `
             <div class="snippet${color}">
                 <img class="snippet${color}__image" src="https://raritanlibrary.org/img/events/${event.img}.webp">

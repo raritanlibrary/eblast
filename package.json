@@ -5,13 +5,14 @@
   "dependencies": {
     "js-yaml": "^4.1.0",
     "pug": "^3.0.2",
-    "puppeteer": "^13.5.2",
+    "puppeteer": "^13.6.0",
     "stylus": "^0.57.0"
   },
   "devDependencies": {
-    "@parcel/transformer-pug": "^2.4.1",
-    "@parcel/transformer-stylus": "^2.4.1",
-    "parcel": "^2.4.1"
+    "@parcel/transformer-pug": "^2.5.0",
+    "@parcel/transformer-stylus": "^2.5.0",
+    "parcel": "^2.5.0",
+    "sharp": "^0.29.3"
   },
   "scripts": {
     "clear": "rm -rf dist && rm -rf .parcel-cache",
